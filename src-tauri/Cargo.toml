@@ -1,3 +1,5 @@
+cargo-features = ["profile-rustflags", "trim-paths"]
+
 [package]
 name = "idk"
 version = "0.0.0"
@@ -15,8 +17,34 @@ crate-type = ["lib", "cdylib", "staticlib"]
 tauri-build = { version = "2.0.0-rc", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.0-rc", features = [] }
+tauri = { version = "2.0.0-rc", features = ["protocol-asset", "image"] }
 tauri-plugin-shell = "2.0.0-rc"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+ring = "0.17.8"
+google-drive = "0.7.0"
+rand = "0.8.5"
+tokio = { version = "1.39.2", features = ["rt", "macros"] }
+base64 = "0.22.1"
+image = "0.24.9"
+quircs = "0.10.2"
+qrcode-generator = "4.1.9"
+anyhow = "1.0.86"
+thiserror = "1.0.63"
 
+
+[toolchain]
+channel = "nightly"
+
+[profile.dev]
+incremental = true          # Compile your binary in smaller steps.
+rustflags = ["-Zthreads=8"] # Better compile performance.
+
+[profile.release]
+codegen-units = 1                            # Allows LLVM to perform better optimization.
+lto = true                                   # Enables link-time-optimizations.
+opt-level = "s"                              # Prioritizes small binary size. Use `3` if you prefer speed.
+panic = "abort"                              # Higher performance by disabling panic handlers.
+strip = true                                 # Ensures debug symbols are removed.
+trim-paths = "all"                           # Removes potentially privileged information from your binaries.
+rustflags = ["-Cdebuginfo=0", "-Zthreads=8"] # Better compile performance.
