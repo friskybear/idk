@@ -6,11 +6,7 @@ import Logo from "./Component/Logo/Logo";
 //import { debounce } from "lodash";
 
 function App() {
-  const [image, SetImage] = createSignal<string>("");
 
-  invoke("new_qrcode", { key: "hello" }).then((res) => {
-    SetImage(convertFileSrc(res as string));
-  });
 
   return (
     <>
@@ -19,7 +15,6 @@ function App() {
         <Switch_Theme></Switch_Theme>
       </header>
       <main>
-        <img src={image()} alt="loading" />
       </main>
       <footer></footer>
     </>
