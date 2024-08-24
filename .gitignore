@@ -12,7 +12,7 @@ Cargo.lock
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
-
+.*
 node_modules
 dist
 .vscode
@@ -192,5 +192,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
-bun.lockb
+.env
+.env.production
+.env.development

@@ -1,6 +1,7 @@
-use anyhow::Result;
+use parking_lot::Mutex;
 use qrcode_generator::to_png_to_file;
-use std::env::current_dir;
+use std::{env::current_dir, sync::LazyLock};
+use tempfile::TempDir;
 
 use crate::error::AppError;
 
@@ -35,3 +36,7 @@ pub fn qr_reader(path: &str, prefix: &str) -> Result<String, AppError> {
         "Could not find the suitable Qr code".to_owned(),
     ))
 }
+
+// temp directory
+pub static TEMP_DIR: LazyLock<Mutex<Option<TempDir>>> =
+    LazyLock::new(|| Mutex::new(Some(TempDir::new().unwrap())));

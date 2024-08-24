@@ -1,10 +1,11 @@
+import { createAutoAnimate } from "@formkit/auto-animate/solid";
 import { A } from "@solidjs/router";
 import { Component } from "solid-js";
 
 const Logo: Component<{}> = (props) => {
   return (
     <A href="/" class="">
-      <svg version="1.1" width="150" height="70" viewBox="0 0 1500 647">
+      <svg version="1.1" width="130" height="70" viewBox="0 0 1500 647">
         <g transform="matrix(1,0,0,1,-0.9090909090909918,-0.7859037794071355)">
           <svg
             viewBox="0 0 396 171"
