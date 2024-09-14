@@ -4,7 +4,7 @@
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    
+
   ],
   daisyui: {
     themes: [
@@ -14,9 +14,9 @@ module.exports = {
           "secondary": "#ea76ae",
           "accent": "#c2601e",
           "neutral": "#091544",
-          "base-100": "#e8ecfc",
-          "info": "#0081ff",      
-          "success": "#00c49d",      
+          "base-100": "#dee6ed",
+          "info": "#0081ff",
+          "success": "#00c49d",
           "warning": "#f5a000",
           "error": "#ff8993",
         },
@@ -25,19 +25,19 @@ module.exports = {
           "secondary": "#84154b",
           "accent": "#dd6d22",
           "neutral": "#dde6ee",
-          "base-100": "#030717",
-          "info": "#0081ff",      
-          "success": "#00c49d",      
+          "base-100": "#060e2d",
+          "info": "#0081ff",
+          "success": "#00c49d",
           "warning": "#f5a000",
           "error": "#ff8993",
         }
       },
-      
+
     ],
   },
   theme: {
     extend: {
-      
+
       colors: {
         'text': {
           50: 'var(--text-50)',
@@ -105,11 +105,11 @@ module.exports = {
           950: 'var(--accent-950)',
         },
        },
-       
-       
+
+
     },
   },
-  
+
     plugins: [require("daisyui"),require("tailwindcss-animate"),require("tailwindcss-3d"),require("tailwindcss-animated")],
 
 }

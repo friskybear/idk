@@ -5,12 +5,15 @@ use thiserror::Error;
 pub enum AppError {
     #[error("An error occurred: {0}")]
     CustomError(String),
+    #[error("Failed to deCompress the file")]
+    Decompress(),
 }
 
 impl From<AppError> for InvokeError {
     fn from(error: AppError) -> Self {
         match error {
             AppError::CustomError(err) => err.to_string().into(),
+            AppError::Decompress() => "".into(),
         }
     }
 }

@@ -1,6 +1,10 @@
 use base64::prelude::*;
 use rand::Rng;
 use ring::rand::SecureRandom;
+use std::{
+    fs::File,
+    io::{self, Read, Seek, Write},
+};
 
 fn derive_key(key: &str, salt: &[u8]) -> Result<[u8; 32], ring::error::Unspecified> {
     let salt = ring::hkdf::Salt::new(ring::hkdf::HKDF_SHA256, salt);
@@ -10,9 +14,8 @@ fn derive_key(key: &str, salt: &[u8]) -> Result<[u8; 32], ring::error::Unspecifi
     Ok(key)
 }
 #[tauri::command]
-pub fn encrypt(data: &str, key: String) -> Result<Vec<u8>, &str> {
+pub fn encrypt<'a>(mut data: Vec<u8>, key: String) -> Result<Vec<u8>, &'a str> {
     let (nonce, key) = key.split_at(12);
-    let mut data = data.as_bytes().to_vec();
     let key = derive_key(key, b"IDK").expect("failed to derive the key");
     let unbound_key = ring::aead::UnboundKey::new(&ring::aead::AES_256_GCM, &key).unwrap();
     let key = ring::aead::LessSafeKey::new(unbound_key);
@@ -63,3 +66,28 @@ pub fn get_key(key: Option<&str>, nonce: Option<u8>) -> String {
         }
     }
 }
+
+pub trait Encryption {
+    fn encrypt(&mut self, data: Vec<u8>, key: &str) -> Result<(), io::Error>;
+    fn decrypt(&mut self, key: &str) -> Result<Vec<u8>, io::Error>;
+}
+
+impl Encryption for File {
+
+    fn encrypt(&mut self, data: Vec<u8>, key: &str) -> Result<(), io::Error> {
+        let _ = self.rewind();
+        self.write_all(&encrypt(data, get_key(Some(key), Some(52))).unwrap())?;
+        let _ = self.rewind();
+
+        Ok(())
+    }
+
+    fn decrypt(&mut self, key: &str) -> Result<Vec<u8>, io::Error> {
+        let mut buf = Vec::new();
+        self.read_to_end(&mut buf).unwrap();
+        let _ = self.rewind();
+        Ok(decrypt(buf, get_key(Some(key), Some(52))).unwrap())
+    }
+
+}
+

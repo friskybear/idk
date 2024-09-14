@@ -1,5 +1,6 @@
 import autoAnimate, { AnimationController } from "@formkit/auto-animate";
 import { debounce, throttle } from "lodash";
+import { createSwapy } from "swapy";
 
 // helps triggering a mutation
 export function trigger_small_mutation() {
@@ -18,12 +19,12 @@ export class AutoAnimateManager {
   private constructor(init_state:boolean) {
     this.is_animation_disabled = init_state;
     // Set up the MutationObserver
-    this.observer = new MutationObserver(debounce((mutations) => {
+    this.observer = new MutationObserver((mutations) => {
         this.apply_auto_animate(mutations)
-    },600));
+    });
 
     // Start observing the document
-    this.observer.observe(document.body, { childList: true, subtree: true });
+    this.observer.observe(document.body, { childList: true,characterData:true, subtree: true });
   }
 
   // Singleton instance to ensure only one manager is created
@@ -41,8 +42,16 @@ export class AutoAnimateManager {
   private apply_auto_animate(mutations: MutationRecord[]) {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
+
         const element = node as HTMLElement;
-        if (element.nodeType === 1 && element.classList.contains("animate")) {
+
+        // enable drag and drop
+        if (element.classList && element.classList.contains("swapy")) {
+            createSwapy(element,{animation:"dynamic"}).enable(true);
+        }
+
+
+        if (element.classList && element.classList.contains("animate")) {
           // Check if the element is already being animated
           let controller = this.animation_controllers.get(element);
 
@@ -71,7 +80,6 @@ export class AutoAnimateManager {
 
   // Setter for disableAnimation
   public set animation_status(value: boolean) {
-    console.log(value)
     if (value !== this.is_animation_disabled) {
       this.is_animation_disabled = value;
       this.update_all_controllers();

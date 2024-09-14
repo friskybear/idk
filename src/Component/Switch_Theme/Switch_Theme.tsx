@@ -6,11 +6,9 @@ import {
   createSignal,
   Setter,
   Show,
+  useContext,
 } from "solid-js";
-
-interface Props {
-  theme: string;
-}
+import { AppManagerContext } from "../../utils/Context";
 
 function change_theme(theme: string) {
   let element = document.getElementsByTagName("html")[0];
@@ -20,16 +18,16 @@ function change_theme(theme: string) {
   }
 }
 
-const Switch_Theme: Component<{
-  theme: string;
-}> = (props: Props) => {
-  const [window_theme, setWindowTheme] = createSignal(props.theme);
+const Switch_Theme: Component<{}> = (props) => {
+  const app = useContext(AppManagerContext);
+
+  const [window_theme, setWindowTheme] = createSignal(app?.app_manager().theme!);
 
   createEffect(() => {
     change_theme(window_theme());
   });
   return (
-    <section class="animate">
+    <section>
       <Show when={window_theme() === "light"}>{sun(setWindowTheme)}</Show>
       <Show when={window_theme() === "dark"}>{moon(setWindowTheme)}</Show>
     </section>

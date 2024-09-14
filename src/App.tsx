@@ -1,20 +1,33 @@
-import { createSignal } from "solid-js";
+import { createContext, createEffect, createSignal, Show } from "solid-js";
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import "./App.css";
-import Switch_Theme from "./Component/Switch_Theme/Switch_Theme";
-import Logo from "./Component/Logo/Logo";
-import { AppManager } from "./utils";
-function App() {
-  const app_manager = new AppManager({});
+import TitleBar from "./Component/Titlebar/TitleBar";
+import { useNavigate } from "@solidjs/router";
+import SaveKeep from "./Component/Save&Keep/SaveKeep";
+import { Provider } from "./utils/Context";
 
+function App() {
+  return (
+    <Provider>
+      <TitleBar></TitleBar>
+      <SaveKeep></SaveKeep>
+      <div class="bg-red-100 w-screen h-full"></div>
+    </Provider>
+  );
+}
+
+export function clickMe() {
+  const nav = useNavigate();
   return (
     <>
-      <header class="flex justify-between m-2 animate">
-        <Logo></Logo>
-        <Switch_Theme theme={"dark"}></Switch_Theme>
-      </header>
-      <main class="h-screen w-screen animate"></main>
-      <footer></footer>
+      <button
+        class="btn h-36 w-36 btn-square btn-primary"
+        onclick={() => {
+          nav("/home", { replace: true });
+        }}
+      >
+        click me
+      </button>
     </>
   );
 }
